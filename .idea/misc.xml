@@ -5,6 +5,7 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/TicTacToe/pom.xml" />
+        <option value="$PROJECT_DIR$/JDK_server/pom.xml" />
       </list>
     </option>
   </component>

@@ -2,19 +2,20 @@ package org.example.client;
 
 
 import org.example.sever.ServerWindow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 
 public class ClientWindow extends JFrame {
     private static final int WINDOW_HEIGHT = 400;
     private static final int WINDOW_WIDTH = 300;
-
-    private ServerWindow server;
+    private final ServerWindow server;
 
     JPanel topPanel, bottomPanel;
     JTextField ipPort, tfPort, login, password;
@@ -22,7 +23,7 @@ public class ClientWindow extends JFrame {
     JButton btnSend, btnLogin;
 
 
-    public ClientWindow(ServerWindow server){
+    public ClientWindow(ServerWindow server) {
         this.server = server;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -34,16 +35,15 @@ public class ClientWindow extends JFrame {
         setVisible(true);
     }
 
-    private Component createTopPanel(){
+    private Component createTopPanel() {
 
         ipPort = new JTextField("127.0.0.1");
         tfPort = new JTextField("8189");
-        login = new JTextField("Astarog");
+        login = new JTextField("user");
         password = new JTextField("qwerty");
         btnLogin = new JButton("Login");
 
-
-        topPanel = new JPanel(new GridLayout(2,3));
+        topPanel = new JPanel(new GridLayout(2, 3));
         topPanel.add(ipPort);
         topPanel.add(tfPort);
         topPanel.add(login);
@@ -53,8 +53,8 @@ public class ClientWindow extends JFrame {
         return topPanel;
     }
 
-    private Component createBottomPanel(){
-        bottomPanel = new JPanel(new GridLayout(1,2));
+    private Component createBottomPanel() {
+        bottomPanel = new JPanel(new GridLayout(1, 2));
         message = new JTextArea();
 
         bottomPanel.add(message);
@@ -63,28 +63,33 @@ public class ClientWindow extends JFrame {
         return bottomPanel;
     }
 
-    private Component createBtnSend(){
+    public String message(JTextArea message) {
+        return String.format("%s: %s \n", login.getText(), message.getText());
+    }
+
+    private Component createBtnSend() {
 
         btnSend = new JButton("Send");
-            btnSend.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JTextArea log = server.log;
-                    String status = String.valueOf(server.getServerStatus());
-                    if (status.equals("online")){
-                    log.append(String.format ("%s: %s", login.getText(), message.getText()));
-                        try(FileWriter writer = new FileWriter("text.tht")) {
-                            writer.write(message.getText());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }else {
-                        log.append("Server offline");
-                    }
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextArea log = server.getLog();
+                String status = String.valueOf(server.getServerStatus());
+                String str = message(message);
+
+                System.out.println();
+                if (status.equals("online") && !Objects.equals(str, " ")) {
+                    server.logWrite(str);
+                    log.append(str);
+                } else {
+                    log.append("Server offline");
                 }
-            });
-            return btnSend;
+            }
+        });
+        return btnSend;
     }
+//
+
 
 
     /**
@@ -94,7 +99,7 @@ public class ClientWindow extends JFrame {
      * Это обычно используется для отображения текста,
      * который не нужно редактировать, например, логов или вывода информации.
      */
-    private Component createTextArea(){
+    private Component createTextArea() {
         logs = new JTextArea();
         logs.setEditable(false);
         return new JScrollPane(logs);
@@ -106,7 +111,6 @@ public class ClientWindow extends JFrame {
     4. При запуске клиента чата заполнять поле истории из файла, если он существует.
     Обратите внимание, что чаще всего история сообщений хранится на сервере и заполнение истории чата лучше делать при соединении с сервером, а не при открытии окна клиента.
      */
-
 
 
 }

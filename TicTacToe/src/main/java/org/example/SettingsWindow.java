@@ -30,7 +30,7 @@ public class SettingsWindow extends JFrame {
     GameWindow gameWindow;
     JRadioButton btnAtVsHuman, btnHumanVsHuman;
     JSlider sliderFieldSizes;
-
+    JPanel panelMode, panelConditionsForVictory;
 
     SettingsWindow(GameWindow gameWindow) {
 
@@ -86,7 +86,7 @@ public class SettingsWindow extends JFrame {
 
     private Component createPanelModeSelection() {
 
-        JPanel panelMode = new JPanel(new GridLayout(3, 1));
+        panelMode = new JPanel(new GridLayout(3, 1));
 
         JLabel modeSelection = new JLabel(labelModeSelection);
         btnAtVsHuman = new JRadioButton(titleBtnATVsHuman);
@@ -128,7 +128,7 @@ public class SettingsWindow extends JFrame {
     }
 
     private Component createPanelConditionsForVictory() {
-        JPanel panelConditionsForVictory = new JPanel(new GridLayout(3, 1));
+        panelConditionsForVictory = new JPanel(new GridLayout(3, 1));
 
         JLabel labellengthToWin = new JLabel(titlelabellengthToWin);
         JSlider sliderlengthToWin = new JSlider(MIN_SIZE, MAX_SIZE,MIN_SIZE);
