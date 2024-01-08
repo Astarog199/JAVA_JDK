@@ -17,14 +17,24 @@ public class ClientWindow extends JFrame {
     private static final int WINDOW_WIDTH = 300;
     private final ServerWindow server;
 
+    private Status status;
+
+    enum Status {
+        online, offline
+    }
+
     JPanel topPanel, bottomPanel;
     JTextField ipPort, tfPort, login, password;
     JTextArea logs, message;
-    JButton btnSend, btnLogin;
+    JButton btnSend, btnLogin, btnExit;
 
 
     public ClientWindow(ServerWindow server) {
         this.server = server;
+
+        status = Status.offline;
+
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -32,6 +42,7 @@ public class ClientWindow extends JFrame {
         add(createTopPanel(), BorderLayout.NORTH);
         add(createBottomPanel(), BorderLayout.SOUTH);
         add(createTextArea());
+
         setVisible(true);
     }
 
@@ -39,16 +50,17 @@ public class ClientWindow extends JFrame {
 
         ipPort = new JTextField("127.0.0.1");
         tfPort = new JTextField("8189");
-        login = new JTextField("user");
+        login = new JTextField("User");
         password = new JTextField("qwerty");
-        btnLogin = new JButton("Login");
+
 
         topPanel = new JPanel(new GridLayout(2, 3));
         topPanel.add(ipPort);
         topPanel.add(tfPort);
         topPanel.add(login);
         topPanel.add(password);
-        topPanel.add(btnLogin);
+        topPanel.add(createBtnLogin());
+        topPanel.add(createBtnExit());
 
         return topPanel;
     }
@@ -74,21 +86,61 @@ public class ClientWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JTextArea log = server.getLog();
-                String status = String.valueOf(server.getServerStatus());
                 String str = message(message);
-
+                String serverStatus = String.valueOf(server.getServerStatus());
                 System.out.println();
-                if (status.equals("online") && !Objects.equals(str, " ")) {
-                    server.logWrite(str);
-                    log.append(str);
+                if (serverStatus.equals("online") ) {
+                    if (!Objects.equals(str, " ") && status == Status.online){
+                        server.logWrite(str);
+                        log.append(str);
+                    }
                 } else {
-                    log.append("Server offline");
+                    System.out.println("sfd");
+                    logs.append("Server offline");
                 }
             }
         });
         return btnSend;
     }
-//
+
+    private Component createBtnLogin(){
+        btnLogin = new JButton("Login");
+
+        btnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String serverStatus = String.valueOf(server.getServerStatus());
+
+                if (serverStatus.equals("online") && status == Status.offline){
+                    status = Status.online;
+                    logs.append("Status: online \n");
+                }else if (serverStatus.equals("offline") ) {
+                    System.out.println(serverStatus);
+                    logs.append("Server offline\n");
+                }
+//                else {
+//                    logs.append("connect to the server\n");
+//                }
+            }
+        });
+
+        return btnLogin;
+    }
+
+    private Component createBtnExit(){
+        btnExit = new JButton("Exit");
+        btnExit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String serverStatus = String.valueOf(server.getServerStatus());
+                if (serverStatus.equals("online") && status == Status.online){
+                    status = Status.offline;
+                    logs.append("Status: offline \n");
+                }
+            }
+        });
+        return btnExit;
+    }
 
 
 
@@ -101,6 +153,7 @@ public class ClientWindow extends JFrame {
      */
     private Component createTextArea() {
         logs = new JTextArea();
+        logs.append("status: " + status + "\n");
         logs.setEditable(false);
         return new JScrollPane(logs);
     }

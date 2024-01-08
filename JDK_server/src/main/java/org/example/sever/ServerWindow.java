@@ -44,7 +44,6 @@ public class ServerWindow extends JFrame {
 
         add(createMainPanel());
 
-        readLog();
         setVisible(true);
     }
 
@@ -56,6 +55,7 @@ public class ServerWindow extends JFrame {
                 if(status==Status.offline){
                     status = Status.online;
                     log.append("Server started " + "\n");
+                    readLog();
                 }else {
                     log.append("Server: " + "\n");
                 }
