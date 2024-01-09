@@ -1,4 +1,4 @@
-package org.example.circles;
+package org.example.common;
 
 import org.example.common.Interactable;
 import org.example.common.MainCanvas;

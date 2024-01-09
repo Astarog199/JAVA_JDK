@@ -1,11 +1,9 @@
 package org.example.bricks;
 
-import org.example.circles.Background;
-import org.example.circles.Ball;
+import org.example.common.Background;
 import org.example.common.CanvasRepaintListener;
 import org.example.common.Interactable;
 import org.example.common.MainCanvas;
-import org.example.common.Sprite;
 
 import javax.swing.*;
 import java.awt.*;

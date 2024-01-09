@@ -34,6 +34,6 @@ public abstract class Sprite  implements Interactable {
     protected float getWidth() {return 2f * halfWidth;}
     protected float getHeight(){return 2f* halfHeight;}
 
-    public void update(MainCanvas canvas, float deltaTime){}
-    public void render(MainCanvas canvas, Graphics g) {}
+    public abstract void update(MainCanvas canvas, float deltaTime);
+    public abstract void render(MainCanvas canvas, Graphics g);
 }

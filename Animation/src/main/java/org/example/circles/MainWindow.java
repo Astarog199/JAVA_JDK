@@ -2,6 +2,7 @@ package org.example.circles;
 
 import org.example.MouseListener.CreateMouseListener;
 import org.example.MouseListener.MouseListener;
+import org.example.common.Background;
 import org.example.common.CanvasRepaintListener;
 import org.example.common.Interactable;
 import org.example.common.MainCanvas;
@@ -82,6 +83,8 @@ public class MainWindow extends JFrame implements CanvasRepaintListener, Thread.
                 if (DEFAULT_COUNT_SPRITES >=2){
                     DEFAULT_COUNT_SPRITES -=1;
                     createCircle();
+                }else {
+                    throw new ArrayIndexOutOfBoundsException("Достигнуто минимальное количество шаров.");
                 }
             }
         };
@@ -115,6 +118,12 @@ public class MainWindow extends JFrame implements CanvasRepaintListener, Thread.
             sprites[i].render(canvas, g);
         }
     }
+
+    /**
+     * Метод выводит исключение на экран
+     * @param t the thread(поток)
+     * @param e the exception(ошибка в потоке)
+     */
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {

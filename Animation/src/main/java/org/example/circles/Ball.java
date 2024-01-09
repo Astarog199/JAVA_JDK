@@ -13,11 +13,11 @@ public class Ball extends Sprite {
     private float vY;
 
      public Ball() {
-        halfHeight = 20 + (float) (Math.random() * 50f);
+        halfHeight = 20 + rnd.nextFloat(50);
         halfWidth = halfHeight;
         this.color = new Color(rnd.nextInt());
-        this.vX = 100f + (float) (Math.random() * 200f);  // перемещение
-        this.vY = 100f + (float) (Math.random() * 200f);  // перемещение
+        this.vX = 100f + rnd.nextFloat(200);  // перемещение
+        this.vY = 100f + rnd.nextFloat(200);  // перемещение
     }
 
     /**
