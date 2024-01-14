@@ -9,7 +9,14 @@
         <option value="$PROJECT_DIR$/AnimationBalls/pom.xml" />
         <option value="$PROJECT_DIR$/Animation/pom.xml" />
         <option value="$PROJECT_DIR$/MouseAdapter/pom.xml" />
+        <option value="$PROJECT_DIR$/Animal/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/Animal/pom.xml" />
+        <option value="$PROJECT_DIR$/MouseAdapter/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_20" project-jdk-name="20" project-jdk-type="JavaSDK">

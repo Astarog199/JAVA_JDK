@@ -2,12 +2,15 @@ package org.example;
 
 
 
-import org.example.client.ClientWindow;
-import org.example.sever.ServerWindow;
+import org.example.client.ClientGUI;
+import org.example.sever.ServerGUI;
 
 public class Main {
     public static void main(String[] args) {
-        ServerWindow serverWindow = new ServerWindow();
-        new ClientWindow(serverWindow);
+        ServerGUI serverGUI = new ServerGUI();
+        new ClientGUI(serverGUI);
+        new ClientGUI(serverGUI);
+
+
     }
 }

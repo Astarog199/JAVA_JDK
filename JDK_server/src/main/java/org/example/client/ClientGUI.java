@@ -1,27 +1,17 @@
 package org.example.client;
-
-
-import org.example.sever.ServerWindow;
-
+import org.example.sever.ServerGUI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Objects;
+import java.awt.event.WindowEvent;
 
 
-public class ClientWindow extends JFrame {
+public class ClientGUI extends JFrame implements ClientView {
     private static final int WINDOW_HEIGHT = 400;
     private static final int WINDOW_WIDTH = 300;
-    private final ServerWindow server;
-
-    private Status status;
-
-    enum Status {
-        online, offline
-    }
+    private final ServerGUI serverGUI;
+    private final Client client;
 
     JPanel topPanel, bottomPanel;
     JTextField ipPort, tfPort, login, password;
@@ -29,11 +19,8 @@ public class ClientWindow extends JFrame {
     JButton btnSend, btnLogin, btnExit;
 
 
-    public ClientWindow(ServerWindow server) {
-        this.server = server;
-
-        status = Status.offline;
-
+    public ClientGUI(ServerGUI serverGUI) {
+        this.serverGUI = serverGUI;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -44,6 +31,8 @@ public class ClientWindow extends JFrame {
         add(createTextArea());
 
         setVisible(true);
+
+        client = new Client( this, serverGUI.getServer());
     }
 
     private Component createTopPanel() {
@@ -52,7 +41,6 @@ public class ClientWindow extends JFrame {
         tfPort = new JTextField("8189");
         login = new JTextField("User");
         password = new JTextField("qwerty");
-
 
         topPanel = new JPanel(new GridLayout(2, 3));
         topPanel.add(ipPort);
@@ -75,29 +63,16 @@ public class ClientWindow extends JFrame {
         return bottomPanel;
     }
 
-    public String message(JTextArea message) {
+    public String message() {
         return String.format("%s: %s \n", login.getText(), message.getText());
     }
 
     private Component createBtnSend() {
-
         btnSend = new JButton("Send");
         btnSend.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JTextArea log = server.getLog();
-                String str = message(message);
-                String serverStatus = String.valueOf(server.getServerStatus());
-                System.out.println();
-                if (serverStatus.equals("online") ) {
-                    if (!Objects.equals(str, " ") && status == Status.online){
-                        server.logWrite(str);
-                        log.append(str);
-                    }
-                } else {
-                    System.out.println("sfd");
-                    logs.append("Server offline");
-                }
+                client.sendMessage();
             }
         });
         return btnSend;
@@ -109,18 +84,7 @@ public class ClientWindow extends JFrame {
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String serverStatus = String.valueOf(server.getServerStatus());
-
-                if (serverStatus.equals("online") && status == Status.offline){
-                    status = Status.online;
-                    logs.append("Status: online \n");
-                }else if (serverStatus.equals("offline") ) {
-                    System.out.println(serverStatus);
-                    logs.append("Server offline\n");
-                }
-//                else {
-//                    logs.append("connect to the server\n");
-//                }
+                serverGUI.connectUser(client, login);
             }
         });
 
@@ -132,11 +96,7 @@ public class ClientWindow extends JFrame {
         btnExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String serverStatus = String.valueOf(server.getServerStatus());
-                if (serverStatus.equals("online") && status == Status.online){
-                    status = Status.offline;
-                    logs.append("Status: offline \n");
-                }
+                client.disconnectToServer();
             }
         });
         return btnExit;
@@ -153,17 +113,26 @@ public class ClientWindow extends JFrame {
      */
     private Component createTextArea() {
         logs = new JTextArea();
-        logs.append("status: " + status + "\n");
+        logs.append("Server status: " + serverGUI.getServerStatus() + "\n");
         logs.setEditable(false);
         return new JScrollPane(logs);
     }
 
-    /*
-    2. Клиентское приложение должно отправлять сообщения из текстового поля сообщения в серверное приложение по нажатию кнопки или по нажатию клавиши Enter на поле ввода сообщения;
-    3. Продублировать импровизированный лог (историю) чата в файле;
-    4. При запуске клиента чата заполнять поле истории из файла, если он существует.
-    Обратите внимание, что чаще всего история сообщений хранится на сервере и заполнение истории чата лучше делать при соединении с сервером, а не при открытии окна клиента.
-     */
+    @Override
+    public void showMessage(String text) {
+        logs.append(text);
+    }
 
+    @Override
+    public void disconnectFromServer() {
+        client.disconnectToServer();
+    }
 
+    @Override
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        if (e.getID() == WindowEvent.WINDOW_CLOSING){
+            disconnectFromServer();
+        }
+    }
 }

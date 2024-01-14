@@ -1,40 +1,29 @@
 package org.example.sever;
 
+import org.example.client.Client;
+import org.example.sever.repository.Storage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 
-public class ServerWindow extends JFrame {
-
+public class ServerGUI extends JFrame {
+    private final Server server;
     private static final int WINDOW_HEIGHT = 300;
     private static final int WINDOW_WIDTH = 400;
     private static final int WINDOW_POSX = 500;
     private static final int WINDOW_POSY = 550;
-    public static final String LOG_PATH = "JDK_server/src/main/java/org/example/sever/log.tht";
-    private Status status;
+
+
     JPanel paneLServerManagement, mainPanel;
     JButton btnConnection, btnDisconnect;
     JTextArea log;
 
-     enum Status {
-        online, offline
-    }
 
-    public Status getServerStatus() {
-        return this.status;
-    }
 
-    public JTextArea getLog(){
-         return log;
-    }
+    public ServerGUI(){
 
-    public ServerWindow(){
-        status = Status.offline;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocation(WINDOW_POSX, WINDOW_POSY);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -45,21 +34,23 @@ public class ServerWindow extends JFrame {
         add(createMainPanel());
 
         setVisible(true);
+        server = new Server(this);
     }
+
+    public Server getServer(){
+        return server;
+    }
+    public Server.Status getServerStatus() {
+        return server.getServerStatus();
+    }
+
 
     private Component createButtonStart(){
         btnConnection =new JButton("Connection");
         btnConnection.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(status==Status.offline){
-                    status = Status.online;
-                    log.append("Server started " + "\n");
-                    readLog();
-                }else {
-                    log.append("Server: " + "\n");
-                }
-
+                server.serverStart();
             }
         });
         return btnConnection;
@@ -70,35 +61,14 @@ public class ServerWindow extends JFrame {
         btnDisconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(status == Status.online){
-                    status = Status.offline;
-                    log.append("Server stopped " + "\n");
-                }else {
-                    log.append("Server: " + "\n");
-                }
+                server.serverStopped();
             }
         });
         return btnDisconnect;
     }
 
-    public void logWrite(String str) {
-        try (FileWriter writer = new FileWriter("JDK_server/src/main/java/org/example/sever/log.tht", true)) {
-            writer.write(str);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private void readLog(){
-         try(FileReader reader = new FileReader(LOG_PATH)) {
-             BufferedReader r = new BufferedReader(reader);
-            String line;
-            while ((line =r.readLine())!= null){
-                log.append(line + "\n");
-             }
-         }catch (Exception e){
-             e.printStackTrace();
-         }
+    public void connectUser(Client client, JTextField login){
+       server.connectUser(client, login);
     }
 
     private Component createMainPanel(){

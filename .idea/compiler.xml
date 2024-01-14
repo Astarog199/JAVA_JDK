@@ -6,11 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="MouseAdapter" />
         <module name="Animation" />
         <module name="JDK_server" />
         <module name="TicTacToe" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="HomeWork2" target="20" />
+      <module name="MouseAdapter" target="20" />
+    </bytecodeTargetLevel>
   </component>
 </project>
