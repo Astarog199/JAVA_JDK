@@ -9,6 +9,7 @@
         <module name="Animation" />
         <module name="JDK_server" />
         <module name="TicTacToe" />
+        <module name="Calculator" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
