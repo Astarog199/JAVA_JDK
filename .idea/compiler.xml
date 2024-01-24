@@ -10,6 +10,7 @@
         <module name="JDK_server" />
         <module name="TicTacToe" />
         <module name="Calculator" />
+        <module name="Directory" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
